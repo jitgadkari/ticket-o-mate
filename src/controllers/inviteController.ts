@@ -62,10 +62,16 @@ export async function acceptInvitation(req: any, res: Response) {
 			return res.status(400).json({ error: 'Invalid or expired invitation' });
 		}
 
-		// Create UserOrganization entry and update invitation status
 		await prisma.$transaction([
-			prisma.userOrganization.create({
-				data: {
+			prisma.userOrganization.upsert({
+				where: {
+					userId_organizationId: {
+						userId,
+						organizationId: invitation.organizationId
+					}
+				},
+				update: {}, // No update required if entry exists
+				create: {
 					userId,
 					organizationId: invitation.organizationId,
 					role: 'USER'
