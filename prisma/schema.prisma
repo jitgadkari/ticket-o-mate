@@ -1,4 +1,3 @@
-// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -15,10 +14,41 @@ model User {
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  role      UserRole @default(USER)
+
+  // Relationships
+  organizations     UserOrganization[]
+  ownedOrganizations Organization[] @relation("OrganizationOwner")
+}
+
+model Organization {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ownerId     String   
+
+  // Relationships
+  owner       User     @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  users       UserOrganization[]
+}
+
+model UserOrganization {
+  userId         String
+  organizationId String
+  role           UserRole @default(USER)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@id([userId, organizationId])
+  @@index([userId])
+  @@index([organizationId])
 }
 
 enum UserRole {
   USER
   ADMIN
+  OWNER
 }

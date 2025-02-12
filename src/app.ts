@@ -3,8 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDatabase } from './config/database';
 import authRoutes from './routes/authRoutes';
-// import userRoutes from './routes/userRoutes';
-// import { errorHandler } from './middleware/errorMiddleware';
+import organizationRoutes from './routes/organizationRoutes';
+
 
 dotenv.config();
 
@@ -17,10 +17,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/users', userRoutes);
+app.use('/api/organizations', organizationRoutes);
 
-// Error handling middleware
-// app.use(errorHandler);
 
 // Database connection
 connectDatabase();
