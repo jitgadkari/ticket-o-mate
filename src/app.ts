@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import { connectDatabase } from './config/database';
 import authRoutes from './routes/authRoutes';
 import organizationRoutes from './routes/organizationRoutes';
+import inviteRoutes from './routes/inviteRoutes';
+
 
 
 dotenv.config();
@@ -18,6 +20,8 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/organizations', organizationRoutes);
+app.use('/api/invites', inviteRoutes);
+
 
 
 // Database connection

@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { prisma } from '../config/database'
 
 export async function createOrganization(req: any, res: Response) {
-  console.log(req)
+  
     const { name } = req.body
     const userId = req.user?.user_metadata?.sub
 

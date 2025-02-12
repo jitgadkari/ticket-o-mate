@@ -9,38 +9,34 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relationships
-  organizations     UserOrganization[]
-  ownedOrganizations Organization[] @relation("OrganizationOwner")
+  id                 String             @id @default(uuid())
+  email              String             @unique
+  name               String?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  ownedOrganizations Organization[]     @relation("OrganizationOwner")
+  organizations      UserOrganization[]
 }
 
 model Organization {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  ownerId     String   
-
-  // Relationships
-  owner       User     @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  id          String             @id @default(uuid())
+  name        String             @unique
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  ownerId     String
+  owner       User               @relation("OrganizationOwner", fields: [ownerId], references: [id])
   users       UserOrganization[]
+  invitations Invitation[]
 }
 
 model UserOrganization {
   userId         String
   organizationId String
-  role           UserRole @default(USER)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  user         User         @relation(fields: [userId], references: [id])
-  organization Organization @relation(fields: [organizationId], references: [id])
+  role           UserRole     @default(USER)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
 
   @@id([userId, organizationId])
   @@index([userId])
@@ -51,4 +47,23 @@ enum UserRole {
   USER
   ADMIN
   OWNER
+}
+
+model Invitation {
+  id             String           @id @default(uuid())
+  email          String
+  organizationId String
+  status         InvitationStatus @default(PENDING)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+
+  @@index([email])
+  @@index([organizationId])
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
