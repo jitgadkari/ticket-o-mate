@@ -5,6 +5,7 @@ import { connectDatabase } from './config/database';
 import authRoutes from './routes/authRoutes';
 import organizationRoutes from './routes/organizationRoutes';
 import inviteRoutes from './routes/inviteRoutes';
+import projectRoutes from './routes/projectRoutes';
 
 
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/organizations', organizationRoutes);
 app.use('/api/invites', inviteRoutes);
+app.use('/api/projects', projectRoutes);
 
 
 
